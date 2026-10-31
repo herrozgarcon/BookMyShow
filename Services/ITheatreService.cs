@@ -10,4 +10,9 @@ public interface ITheatreService
     
     Task<List<TheatreDto>> GetAllTheatres();
     
+    Task<TheatreDto> GetTheatrebyID(int theatreId);
+
+    Task<Theatres> updateTheatreAsync(int id,CreateTheatreDto theatreDto);
+
+    Task<bool> deleteTheatre(int theatreId);
 }

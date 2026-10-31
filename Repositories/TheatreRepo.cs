@@ -25,6 +25,31 @@ public class TheatreRepo: ITheatreRepo
         var theatreslist = await _dbContext.Theatres.ToListAsync();
         return theatreslist;
     }
-    
+
+    public async Task<Theatres> getTheatrebyID(int id)
+    {
+        var theatre = await _dbContext.Theatres.FirstOrDefaultAsync(th => th.TheatresId == id);
+        return theatre;
+    }
+
+    public async Task updateTheatreAsync(Theatres theatres)
+    {
+         _dbContext.Update(theatres);
+        await _dbContext.SaveChangesAsync();
+    }
+
+    public async Task<bool> deleteTheatre(int id)
+    {
+        var flag=await _dbContext.Theatres.ExecuteDeleteAsync();
+        await _dbContext.SaveChangesAsync();
+        if (flag == 1)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
     
 }

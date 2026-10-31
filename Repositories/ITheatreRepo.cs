@@ -8,4 +8,9 @@ public interface ITheatreRepo
    
    Task<List<Theatres>> GetAllTheatres();
    
+   Task<Theatres> getTheatrebyID(int id);
+   
+   Task updateTheatreAsync(Theatres theatres);
+   
+   Task<bool> deleteTheatre(int id);
 }
