@@ -12,6 +12,7 @@ public class ApplicationDbContext: DbContext
     
     //creating the table 
     public DbSet<Theatres> Theatres { get; set; }
+    public DbSet<Movies> Movies { get; set; }
     
     
     //setting up contraints for the table to be created 
@@ -32,9 +33,28 @@ public class ApplicationDbContext: DbContext
                 .IsRequired()
                 .HasMaxLength(200);
         });
-        
-        
-        
+
+        modelBuilder.Entity<Movies>(entity =>
+        {
+            entity.HasKey(m => m.MoviesId);
+
+            entity.Property(m => m.Title)
+                .IsRequired()
+                .HasMaxLength(150);
+            entity.Property(m => m.ReleaseDate)
+                .IsRequired()
+                .HasColumnType("date");
+            entity.Property(m => m.Genre)
+                .IsRequired()
+                .HasMaxLength(150);
+            entity.Property(m=>m.Description)
+                .IsRequired()
+                .HasMaxLength(200);
+                
+        });
+
+
+
     }
     
 }
