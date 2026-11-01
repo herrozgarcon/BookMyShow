@@ -15,4 +15,6 @@ public interface IMoviesService
     
     public Task<bool> DeleteMovieAsync(int id);
     
+    Task<List<Movies>> SearchMoviesByTitleAsync(string title);
+    
 }

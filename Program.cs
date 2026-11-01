@@ -17,12 +17,15 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(
         builder.Configuration.GetConnectionString("DefaultConnection")
     ));
-// Dependency Injection
-builder.Services.AddScoped<TheatreRepo>();
+// Theatre (automated object creation)
+builder.Services.AddScoped<ITheatreRepo,TheatreRepo>();
 builder.Services.AddScoped<ITheatreService, TheatreService>();
-// Movie DI
+// Movie DI (automated object creation)
 builder.Services.AddScoped<IMoviesRepo, MoviesRepo>();
 builder.Services.AddScoped<IMoviesService, MoviesService>();
+//Screen Di(automated object creation)
+builder.Services.AddScoped<IScreenService, ScreenService>();
+builder.Services.AddScoped<IScreenRepo, ScreenRepo>();
 
 var app = builder.Build();
 

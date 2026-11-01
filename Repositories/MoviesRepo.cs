@@ -49,5 +49,13 @@ public class MoviesRepo : IMoviesRepo
         await _dbContext.SaveChangesAsync();
         return true;
     }
+    
+    public async Task<List<Movies>> SearchMoviesByTitleAsync(string title)
+    {
+        return await _dbContext.Movies
+            .Where(m => m.Title.Contains(title))
+            .ToListAsync();
+    }
+    
 
 }

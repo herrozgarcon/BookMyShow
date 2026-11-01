@@ -7,10 +7,10 @@ namespace BookMyShow.Services;
 public class TheatreService:ITheatreService
 {
 
-    private readonly TheatreRepo _theatreRepo;
+    private readonly ITheatreRepo _theatreRepo;
     
 
-    public TheatreService(TheatreRepo theatreRepo)
+    public TheatreService(ITheatreRepo theatreRepo)
     {
         _theatreRepo = theatreRepo;
     }

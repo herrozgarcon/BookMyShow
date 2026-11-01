@@ -14,7 +14,7 @@ public interface IMoviesRepo
     
     Task<bool> DeleteMovieAsync(Movies movie);
     
-    
+    Task<List<Movies>> SearchMoviesByTitleAsync(string title);
     
     
 }

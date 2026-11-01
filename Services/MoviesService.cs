@@ -14,7 +14,7 @@ public class MoviesService:IMoviesService
     }
     public async Task AddMovieAsync(CreateMovieDto createMovieDto)
     {
-        var Movies = new Models.Movies
+        var Movies = new Movies
         {
             Title = createMovieDto.Title,
             Description = createMovieDto.Description,
@@ -95,6 +95,11 @@ public class MoviesService:IMoviesService
 
         await _moviesRepo.DeleteMovieAsync(movie);
         return true;
+    }
+    
+    public async Task<List<Movies>> SearchMoviesByTitleAsync(string title)
+    {
+        return await _moviesRepo.SearchMoviesByTitleAsync(title);
     }
 
 }

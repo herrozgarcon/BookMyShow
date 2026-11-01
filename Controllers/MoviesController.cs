@@ -52,7 +52,7 @@ public class MoviesController : Controller
         }
         return Ok("movie updated\n"+movie);
     }
-
+    
     [HttpDelete("{id}")]
     public async Task<ActionResult<bool>> deleteMovie(int id)
     {
@@ -63,5 +63,22 @@ public class MoviesController : Controller
         }
         return Ok("Movie deleted");
     }
-    
+    //using query params
+    [HttpGet("search/")]
+    public async Task<IActionResult> SearchMoviesByTitle([FromQuery] string title)
+    {
+        if (string.IsNullOrWhiteSpace(title))
+        {
+            return BadRequest("Movie title cannot be empty.");
+        }
+
+        var movies = await _moviesService.SearchMoviesByTitleAsync(title);
+
+        if (movies.Count == 0)
+        {
+            return NotFound("No movies found.");
+        }
+
+        return Ok(movies);
+    }
 }
