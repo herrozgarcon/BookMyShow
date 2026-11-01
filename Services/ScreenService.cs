@@ -63,15 +63,16 @@ public class ScreenService : IScreenService
         await _screenRepo.UpdateScreenAsync();
     }
 
-    public async Task DeleteScreenAsync(int id)
+    public async Task<bool> DeleteScreenAsync(int id)
     {
         var screen = await _screenRepo.GetScreenByIdAsync(id);
 
         if (screen == null)
         {
-            throw new KeyNotFoundException("Screen not found.");
+            return false;
         }
 
         await _screenRepo.DeleteScreenAsync(screen);
+        return true;
     }
 }

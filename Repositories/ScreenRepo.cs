@@ -21,12 +21,12 @@ public class ScreenRepo : IScreenRepo
 
     public async Task<List<Screens>> GetAllScreensAsync()
     {
-        return await _dbContext.Screens.ToListAsync();
+        return await _dbContext.Screens.Include(s => s.Theatre).ToListAsync();
     }
 
     public async Task<Screens?> GetScreenByIdAsync(int id)
     {
-        return await _dbContext.Screens
+        return await _dbContext.Screens.Include(s => s.Theatre)
             .FirstOrDefaultAsync(s => s.ScreensId == id);
     }
 

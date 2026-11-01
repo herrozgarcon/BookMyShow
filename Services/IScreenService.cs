@@ -11,5 +11,5 @@ public interface IScreenService
 
     Task UpdateScreenAsync(int id, CreateScreenDto screens);
 
-    Task DeleteScreenAsync(int id);
+    Task<bool> DeleteScreenAsync(int id);
 }

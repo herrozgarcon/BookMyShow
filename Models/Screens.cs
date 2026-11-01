@@ -15,5 +15,6 @@ public class Screens
     [MaxLength(50)]
     public string ScreenName { get; set; } = string.Empty;
 
+    //navigation property 
     public Theatres Theatre { get; set; } = null!;
 }
