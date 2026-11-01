@@ -8,8 +8,6 @@ namespace BookMyShow.Controllers;
 [Route("api/[controller]")]
 public class MoviesController : Controller
 {
-
-    
     
     private readonly IMoviesService _moviesService;
 
@@ -24,6 +22,46 @@ public class MoviesController : Controller
         await _moviesService.AddMovieAsync(createMovieDto);
         return Ok("Movie added");
     }
-    
+
+    [HttpGet]
+    public async Task<ActionResult<List<Movies>>> GetAllMovies()
+    {
+        var moviedto=await _moviesService.GetAllMoviesAsync();
+        return Ok(moviedto);
+    }
+
+
+    [HttpGet("{id}")]
+    public async Task<ActionResult<Movies?>> GetMovieById(int id)
+    {
+        var moviedto = await _moviesService.GetMovieByIdAsync(id);
+        if (moviedto == null)
+        {
+            return NotFound("Movie not found");
+        }
+        return Ok(moviedto);
+    }
+
+    [HttpPut("{id}")]
+    public async Task<ActionResult<Movies?>> updatemovie(int id,CreateMovieDto createMovieDto)
+    {
+        var movie= await _moviesService.updateMovie(id, createMovieDto);
+        if (movie == null)
+        {
+            return NotFound("Movie not found not able to update");
+        }
+        return Ok("movie updated\n"+movie);
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<ActionResult<bool>> deleteMovie(int id)
+    {
+        bool isdeleted=await _moviesService.DeleteMovieAsync(id);
+        if (!isdeleted)
+        {
+            return NoContent();
+        }
+        return Ok("Movie deleted");
+    }
     
 }

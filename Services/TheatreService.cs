@@ -41,7 +41,7 @@ public class TheatreService:ITheatreService
         await _theatreRepo.AddTheatreasync(theatre);
     }
 
-    public async Task<TheatreDto>? GetTheatrebyID(int id)
+    public async Task<TheatreDto?> GetTheatrebyID(int id)
     {
         var theatre = await _theatreRepo.getTheatrebyID(id);
         
