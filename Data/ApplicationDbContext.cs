@@ -15,6 +15,7 @@ public class ApplicationDbContext: DbContext
     public DbSet<Movies> Movies { get; set; }
     
     public DbSet<Screens> Screens{ get; set; }
+    public DbSet<Seats> Seats { get; set; }
     
     
     
@@ -71,6 +72,19 @@ public class ApplicationDbContext: DbContext
 
             entity.HasIndex(s => new { s.TheatreId, s.ScreenName })
                 .IsUnique();
+        });
+
+        modelBuilder.Entity<Seats>(entity =>
+        {
+            entity.HasKey(s => s.SeatId);
+            entity.Property(s => s.RowName).IsRequired().HasMaxLength(5);
+            entity.Property(s => s.SeatNumber).IsRequired();
+            entity.Property(s => s.SeatType).IsRequired().HasMaxLength(30);
+            entity.HasOne(s => s.Screen)
+                .WithMany()
+                .HasForeignKey(s => s.ScreensId)
+                .OnDelete(DeleteBehavior.Restrict);
+            entity.HasIndex(s => new { s.ScreensId, s.RowName, s.SeatNumber }).IsUnique();
         });
 
 

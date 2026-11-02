@@ -26,6 +26,8 @@ builder.Services.AddScoped<IMoviesService, MoviesService>();
 //Screen Di(automated object creation)
 builder.Services.AddScoped<IScreenService, ScreenService>();
 builder.Services.AddScoped<IScreenRepo, ScreenRepo>();
+builder.Services.AddScoped<ISeatsRepo, SeatsRepo>();
+builder.Services.AddScoped<ISeatsService, SeatsService>();
 
 var app = builder.Build();
 
@@ -35,6 +37,7 @@ app.MapControllers();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.MapScalarApiReference();
 
 }
 

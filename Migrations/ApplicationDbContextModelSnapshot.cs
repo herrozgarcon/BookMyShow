@@ -84,6 +84,38 @@ namespace BookMyShow.Migrations
                     b.ToTable("Screens");
                 });
 
+            modelBuilder.Entity("BookMyShow.Models.Seats", b =>
+                {
+                    b.Property<int>("SeatId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SeatId"));
+
+                    b.Property<string>("RowName")
+                        .IsRequired()
+                        .HasMaxLength(5)
+                        .HasColumnType("nvarchar(5)");
+
+                    b.Property<int>("ScreensId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SeatNumber")
+                        .HasColumnType("int");
+
+                    b.Property<string>("SeatType")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.HasKey("SeatId");
+
+                    b.HasIndex("ScreensId", "RowName", "SeatNumber")
+                        .IsUnique();
+
+                    b.ToTable("Seats");
+                });
+
             modelBuilder.Entity("BookMyShow.Models.Theatres", b =>
                 {
                     b.Property<int>("TheatresId")
@@ -116,6 +148,17 @@ namespace BookMyShow.Migrations
                         .IsRequired();
 
                     b.Navigation("Theatre");
+                });
+
+            modelBuilder.Entity("BookMyShow.Models.Seats", b =>
+                {
+                    b.HasOne("BookMyShow.Models.Screens", "Screen")
+                        .WithMany()
+                        .HasForeignKey("ScreensId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Screen");
                 });
 #pragma warning restore 612, 618
         }
