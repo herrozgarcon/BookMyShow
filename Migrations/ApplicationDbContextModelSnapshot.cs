@@ -22,6 +22,44 @@ namespace BookMyShow.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("BookMyShow.Models.AppUser", b =>
+                {
+                    b.Property<int>("AppUserId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AppUserId"));
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("NormalizedEmail")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<string>("PasswordHash")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("AppUserId");
+
+                    b.HasIndex("NormalizedEmail")
+                        .IsUnique();
+
+                    b.ToTable("AppUsers");
+                });
+
             modelBuilder.Entity("BookMyShow.Models.Booking", b =>
                 {
                     b.Property<int>("BookingId")
@@ -29,6 +67,9 @@ namespace BookMyShow.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BookingId"));
+
+                    b.Property<int?>("AppUserId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("BookingDate")
                         .HasColumnType("datetime2");
@@ -66,6 +107,8 @@ namespace BookMyShow.Migrations
                         .HasColumnType("decimal(10,2)");
 
                     b.HasKey("BookingId");
+
+                    b.HasIndex("AppUserId");
 
                     b.HasIndex("BookingReference")
                         .IsUnique();
@@ -289,11 +332,18 @@ namespace BookMyShow.Migrations
 
             modelBuilder.Entity("BookMyShow.Models.Booking", b =>
                 {
+                    b.HasOne("BookMyShow.Models.AppUser", "AppUser")
+                        .WithMany()
+                        .HasForeignKey("AppUserId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("BookMyShow.Models.Shows", "Show")
                         .WithMany("Bookings")
                         .HasForeignKey("ShowId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("AppUser");
 
                     b.Navigation("Show");
                 });

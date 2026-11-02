@@ -1,6 +1,7 @@
 using BookMyShow.DTOs;
 using BookMyShow.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BookMyShow.Controllers;
 
@@ -12,7 +13,7 @@ public class ShowsController : ControllerBase
 
     public ShowsController(IShowsService showsService) => _showsService = showsService;
 
-    [HttpPost]
+    [Authorize(Roles = "Admin"), HttpPost]
     public async Task<IActionResult> Create([FromBody] CreateShowDto dto)
     {
         try
@@ -44,7 +45,7 @@ public class ShowsController : ControllerBase
     [HttpGet("search")]
     public async Task<IActionResult> SearchByDate([FromQuery] DateOnly date) => Ok(await _showsService.SearchByDateAsync(date));
 
-    [HttpPut("{id:int}")]
+    [Authorize(Roles = "Admin"), HttpPut("{id:int}")]
     public async Task<IActionResult> Update(int id, [FromBody] CreateShowDto dto)
     {
         try
@@ -57,7 +58,7 @@ public class ShowsController : ControllerBase
         catch (InvalidOperationException ex) { return Conflict(ex.Message); }
     }
 
-    [HttpDelete("{id:int}")]
+    [Authorize(Roles = "Admin"), HttpDelete("{id:int}")]
     public async Task<IActionResult> Delete(int id)
     {
         if (!await _showsService.DeleteAsync(id))

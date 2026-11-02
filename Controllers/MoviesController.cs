@@ -2,10 +2,12 @@ using BookMyShow.DTOs;
 using BookMyShow.Migrations;
 using BookMyShow.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BookMyShow.Controllers;
 [ApiController]
 [Route("api/[controller]")]
+[Authorize(Roles = "Admin")]
 public class MoviesController : Controller
 {
     
@@ -16,7 +18,7 @@ public class MoviesController : Controller
         _moviesService = moviesService;
     }
     
-    [HttpPost]
+    [Authorize(Roles = "Admin"), HttpPost]
     public async  Task<ActionResult> addMovie(CreateMovieDto createMovieDto)
     {
         await _moviesService.AddMovieAsync(createMovieDto);
@@ -42,7 +44,7 @@ public class MoviesController : Controller
         return Ok(moviedto);
     }
 
-    [HttpPut("{id}")]
+    [Authorize(Roles = "Admin"), HttpPut("{id}")]
     public async Task<ActionResult<Movies?>> updatemovie(int id,CreateMovieDto createMovieDto)
     {
         var movie= await _moviesService.updateMovie(id, createMovieDto);
@@ -53,7 +55,7 @@ public class MoviesController : Controller
         return Ok("movie updated\n"+movie);
     }
     
-    [HttpDelete("{id}")]
+    [Authorize(Roles = "Admin"), HttpDelete("{id}")]
     public async Task<ActionResult<bool>> deleteMovie(int id)
     {
         bool isdeleted=await _moviesService.DeleteMovieAsync(id);

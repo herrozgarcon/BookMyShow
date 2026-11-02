@@ -21,7 +21,7 @@ public class ApplicationDbContext: DbContext
     public DbSet<Booking> Bookings { get; set; }
     public DbSet<BookingSeat> BookingSeats { get; set; }
     
-    
+    public DbSet<AppUser>  AppUsers { get; set; }
     
     
     
@@ -141,7 +141,19 @@ public class ApplicationDbContext: DbContext
             entity.Property(booking => booking.TotalAmount).IsRequired().HasPrecision(10, 2);
             entity.ToTable(table => table.HasCheckConstraint("CK_Bookings_TotalAmount_NonNegative", "[TotalAmount] >= 0"));
             entity.Property(booking => booking.Status).IsRequired().HasMaxLength(20);
+            entity.HasOne(booking => booking.AppUser).WithMany().HasForeignKey(booking => booking.AppUserId).OnDelete(DeleteBehavior.Restrict);
             entity.HasOne(booking => booking.Show).WithMany(show => show.Bookings).HasForeignKey(booking => booking.ShowId).OnDelete(DeleteBehavior.Restrict);
+        });
+
+        modelBuilder.Entity<AppUser>(entity =>
+        {
+            entity.HasKey(user => user.AppUserId);
+            entity.Property(user => user.Name).IsRequired().HasMaxLength(100);
+            entity.Property(user => user.Email).IsRequired();
+            entity.Property(user => user.NormalizedEmail).IsRequired().HasMaxLength(150);
+            entity.Property(user => user.PasswordHash).IsRequired();
+            entity.Property(user => user.Role).IsRequired();
+            entity.HasIndex(user => user.NormalizedEmail).IsUnique();
         });
 
         modelBuilder.Entity<BookingSeat>(entity =>

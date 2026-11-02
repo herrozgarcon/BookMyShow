@@ -12,7 +12,7 @@ public class BookingService : IBookingService
     private readonly IBookingRepo _repo;
     public BookingService(IBookingRepo repo) => _repo = repo;
 
-    public async Task<BookingResponseDto?> CreateAsync(BookingRequestDto request, CancellationToken cancellationToken = default)
+    public async Task<BookingResponseDto?> CreateAsync(int userId, BookingRequestDto request, CancellationToken cancellationToken = default)
     {
         var name = request.CustomerName?.Trim() ?? "";
         var email = request.CustomerEmail?.Trim() ?? "";
@@ -22,7 +22,7 @@ public class BookingService : IBookingService
         if (request.SeatIds == null || request.SeatIds.Count == 0) throw new ArgumentException("At least one seat must be selected.");
         if (request.SeatIds.Any(x => x <= 0) || request.SeatIds.Distinct().Count() != request.SeatIds.Count)
             throw new ArgumentException("Seat IDs must be positive and unique.");
-        var booking = new Booking { ShowId = request.ShowId, CustomerName = name, CustomerEmail = email,
+        var booking = new Booking { AppUserId = userId, ShowId = request.ShowId, CustomerName = name, CustomerEmail = email,
             CustomerPhone = phone, BookingDate = DateTime.UtcNow, Status = "Confirmed" };
         Booking? created = null;
         for (var attempt = 0; attempt < 3; attempt++)
@@ -34,14 +34,14 @@ public class BookingService : IBookingService
         return created == null ? null : Map(created, "Booking created successfully");
     }
 
-    public async Task<List<BookingResponseDto>> GetAllAsync(CancellationToken ct = default) => (await _repo.GetAllAsync(ct)).Select(x => Map(x)).ToList();
-    public async Task<BookingResponseDto?> GetByIdAsync(int id, CancellationToken ct = default) { var x = await _repo.GetByIdAsync(id, ct); return x == null ? null : Map(x); }
-    public async Task<BookingResponseDto?> GetByReferenceAsync(string reference, CancellationToken ct = default) { var x = await _repo.GetByReferenceAsync(reference, ct); return x == null ? null : Map(x); }
-    public async Task<List<BookingResponseDto>> GetByShowAsync(int showId, CancellationToken ct = default) => (await _repo.GetByShowAsync(showId, ct)).Select(x => Map(x)).ToList();
+    public async Task<List<BookingResponseDto>> GetAllAsync(int userId, CancellationToken ct = default) => (await _repo.GetAllAsync(userId, ct)).Select(x => Map(x)).ToList();
+    public async Task<BookingResponseDto?> GetByIdAsync(int id, int userId, CancellationToken ct = default) { var x = await _repo.GetByIdAsync(id, userId, ct); return x == null ? null : Map(x); }
+    public async Task<BookingResponseDto?> GetByReferenceAsync(string reference, int userId, CancellationToken ct = default) { var x = await _repo.GetByReferenceAsync(reference, userId, ct); return x == null ? null : Map(x); }
+    public async Task<List<BookingResponseDto>> GetByShowAsync(int showId, int userId, CancellationToken ct = default) => (await _repo.GetByShowAsync(showId, userId, ct)).Select(x => Map(x)).ToList();
 
-    public async Task<BookingCancellationResponseDto?> CancelAsync(int id, CancellationToken ct = default)
+    public async Task<BookingCancellationResponseDto?> CancelAsync(int id, int userId, CancellationToken ct = default)
     {
-        var booking = await _repo.CancelAsync(id, ct);
+        var booking = await _repo.CancelAsync(id, userId, ct);
         return booking == null ? null : new BookingCancellationResponseDto
         {
             BookingId = booking.BookingId,

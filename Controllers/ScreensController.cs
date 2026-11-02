@@ -1,11 +1,13 @@
 using BookMyShow.DTOs;
 using BookMyShow.Models;
 using BookMyShow.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookMyShow.Controllers;
 [ApiController]
 [Route("api/[controller]")]
+[Authorize(Roles = "Admin")]
 public class ScreensController : Controller
 {
     

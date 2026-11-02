@@ -2,6 +2,7 @@ using BookMyShow.DTOs;
 using BookMyShow.Models;
 using BookMyShow.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BookMyShow.Controllers;
 [ApiController]
@@ -18,7 +19,7 @@ public class TheatreController : Controller
     
     
     //adding theatre to DB
-    [HttpPost]
+    [Authorize(Roles = "Admin"), HttpPost]
     public async Task<IActionResult> CreateTheatre(CreateTheatreDto createTheatreDto)
     {
         
@@ -49,7 +50,7 @@ public class TheatreController : Controller
         return Ok(theatre);
     }
 
-    [HttpPut("{id}")]
+    [Authorize(Roles = "Admin"), HttpPut("{id}")]
     public async Task<ActionResult> Updatetheatre(int id,CreateTheatreDto createTheatreDto)
     {
 
@@ -62,7 +63,7 @@ public class TheatreController : Controller
         return Ok(theatre);
     }
 
-    [HttpDelete("{id}")]
+    [Authorize(Roles = "Admin"), HttpDelete("{id}")]
     public async Task<ActionResult> DeleteTheatre(int id)
     {
         var flag=await _theatreService.deleteTheatre(id);

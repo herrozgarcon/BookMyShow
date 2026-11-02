@@ -38,22 +38,22 @@ public class BookingRepo : IBookingRepo
         .Include(x => x.Show).ThenInclude(x => x.Screen).ThenInclude(x => x.Theatre)
         .Include(x => x.Seats).ThenInclude(x => x.Seat);
 
-    public Task<List<Booking>> GetAllAsync(CancellationToken cancellationToken = default) => Query().OrderByDescending(x => x.BookingDate).ToListAsync(cancellationToken);
-    public Task<Booking?> GetByIdAsync(int id, CancellationToken cancellationToken = default) => Query().FirstOrDefaultAsync(x => x.BookingId == id, cancellationToken);
-    public Task<Booking?> GetByReferenceAsync(string reference, CancellationToken cancellationToken = default) => Query().FirstOrDefaultAsync(x => x.BookingReference == reference, cancellationToken);
-    public Task<List<Booking>> GetByShowAsync(int showId, CancellationToken cancellationToken = default) => Query().Where(x => x.ShowId == showId).OrderByDescending(x => x.BookingDate).ToListAsync(cancellationToken);
+    public Task<List<Booking>> GetAllAsync(int userId, CancellationToken cancellationToken = default) => Query().Where(x => x.AppUserId == userId).OrderByDescending(x => x.BookingDate).ToListAsync(cancellationToken);
+    public Task<Booking?> GetByIdAsync(int id, int userId, CancellationToken cancellationToken = default) => Query().FirstOrDefaultAsync(x => x.BookingId == id && x.AppUserId == userId, cancellationToken);
+    public Task<Booking?> GetByReferenceAsync(string reference, int userId, CancellationToken cancellationToken = default) => Query().FirstOrDefaultAsync(x => x.BookingReference == reference && x.AppUserId == userId, cancellationToken);
+    public Task<List<Booking>> GetByShowAsync(int showId, int userId, CancellationToken cancellationToken = default) => Query().Where(x => x.ShowId == showId && x.AppUserId == userId).OrderByDescending(x => x.BookingDate).ToListAsync(cancellationToken);
 
-    public async Task<Booking?> CancelAsync(int id, CancellationToken cancellationToken = default)
+    public async Task<Booking?> CancelAsync(int id, int userId, CancellationToken cancellationToken = default)
     {
         await using var transaction = await _db.Database.BeginTransactionAsync(IsolationLevel.Serializable, cancellationToken);
         var booking = await _db.Bookings.AsNoTracking().Include(x => x.Seats)
-            .FirstOrDefaultAsync(x => x.BookingId == id, cancellationToken);
+            .FirstOrDefaultAsync(x => x.BookingId == id && x.AppUserId == userId, cancellationToken);
         if (booking == null) return null;
         if (booking.Status != "Confirmed") throw new InvalidOperationException("Only confirmed bookings can be cancelled.");
         var seatIds = booking.Seats.Select(x => x.SeatId).ToArray();
         if (seatIds.Length == 0) throw new InvalidOperationException("Booking has no associated seats; cancellation was not applied.");
 
-        var bookingUpdated = await _db.Bookings.Where(x => x.BookingId == id && x.Status == "Confirmed")
+        var bookingUpdated = await _db.Bookings.Where(x => x.BookingId == id && x.AppUserId == userId && x.Status == "Confirmed")
             .ExecuteUpdateAsync(update => update.SetProperty(x => x.Status, "Cancelled"), cancellationToken);
         if (bookingUpdated != 1) throw new InvalidOperationException("Booking was changed by another request. Retry the cancellation.");
 
