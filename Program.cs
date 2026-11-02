@@ -32,6 +32,8 @@ builder.Services.AddScoped<IShowsRepo, ShowsRepo>();
 builder.Services.AddScoped<IShowsService, ShowsService>();
 builder.Services.AddScoped<IShowSeatsRepo, ShowSeatsRepo>();
 builder.Services.AddScoped<IShowSeatsService, ShowSeatsService>();
+builder.Services.AddScoped<IBookingRepo, BookingRepo>();
+builder.Services.AddScoped<IBookingService, BookingService>();
 
 var app = builder.Build();
 

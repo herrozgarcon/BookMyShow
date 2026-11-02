@@ -20,4 +20,6 @@ public class Shows
     public Movies Movie { get; set; } = null!;
 
     public Screens Screen { get; set; } = null!;
+
+    public ICollection<Booking> Bookings { get; set; } = new List<Booking>();
 }

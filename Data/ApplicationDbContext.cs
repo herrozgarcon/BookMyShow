@@ -18,6 +18,8 @@ public class ApplicationDbContext: DbContext
     public DbSet<Seats> Seats { get; set; }
     public DbSet<Shows> Shows { get; set; }
     public DbSet<ShowSeats> ShowSeats { get; set; }
+    public DbSet<Booking> Bookings { get; set; }
+    public DbSet<BookingSeat> BookingSeats { get; set; }
     
     
     
@@ -125,6 +127,30 @@ public class ApplicationDbContext: DbContext
                 .OnDelete(DeleteBehavior.Restrict);
 
             entity.HasIndex(showSeat => new { showSeat.ShowId, showSeat.SeatId }).IsUnique();
+        });
+
+        modelBuilder.Entity<Booking>(entity =>
+        {
+            entity.HasKey(booking => booking.BookingId);
+            entity.Property(booking => booking.BookingReference).IsRequired().HasMaxLength(30);
+            entity.HasIndex(booking => booking.BookingReference).IsUnique();
+            entity.Property(booking => booking.CustomerName).IsRequired().HasMaxLength(100);
+            entity.Property(booking => booking.CustomerEmail).IsRequired().HasMaxLength(150);
+            entity.Property(booking => booking.CustomerPhone).IsRequired().HasMaxLength(15);
+            entity.Property(booking => booking.BookingDate).IsRequired().HasColumnType("datetime2");
+            entity.Property(booking => booking.TotalAmount).IsRequired().HasPrecision(10, 2);
+            entity.ToTable(table => table.HasCheckConstraint("CK_Bookings_TotalAmount_NonNegative", "[TotalAmount] >= 0"));
+            entity.Property(booking => booking.Status).IsRequired().HasMaxLength(20);
+            entity.HasOne(booking => booking.Show).WithMany(show => show.Bookings).HasForeignKey(booking => booking.ShowId).OnDelete(DeleteBehavior.Restrict);
+        });
+
+        modelBuilder.Entity<BookingSeat>(entity =>
+        {
+            entity.HasKey(bookingSeat => bookingSeat.BookingSeatId);
+            entity.Property(bookingSeat => bookingSeat.Price).IsRequired().HasPrecision(10, 2);
+            entity.ToTable(table => table.HasCheckConstraint("CK_BookingSeats_Price_NonNegative", "[Price] >= 0"));
+            entity.HasOne(bookingSeat => bookingSeat.Booking).WithMany(booking => booking.Seats).HasForeignKey(bookingSeat => bookingSeat.BookingId).OnDelete(DeleteBehavior.Restrict);
+            entity.HasOne(bookingSeat => bookingSeat.Seat).WithMany(seat => seat.BookingSeats).HasForeignKey(bookingSeat => bookingSeat.SeatId).OnDelete(DeleteBehavior.Restrict);
         });
 
 

@@ -19,4 +19,6 @@ public class Seats
     public string SeatType { get; set; } = string.Empty;
 
     public Screens Screen { get; set; } = null!;
+
+    public ICollection<BookingSeat> BookingSeats { get; set; } = new List<BookingSeat>();
 }
