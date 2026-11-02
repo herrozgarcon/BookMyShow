@@ -11,7 +11,7 @@ public class ShowSeats
 
     public int SeatId { get; set; }
 
-    [Required, MaxLength(30)]
+    [Required, MaxLength(20)]
     public string Status { get; set; } = "Available";
 
     public Shows Show { get; set; } = null!;

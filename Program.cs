@@ -30,6 +30,8 @@ builder.Services.AddScoped<ISeatsRepo, SeatsRepo>();
 builder.Services.AddScoped<ISeatsService, SeatsService>();
 builder.Services.AddScoped<IShowsRepo, ShowsRepo>();
 builder.Services.AddScoped<IShowsService, ShowsService>();
+builder.Services.AddScoped<IShowSeatsRepo, ShowSeatsRepo>();
+builder.Services.AddScoped<IShowSeatsService, ShowSeatsService>();
 
 var app = builder.Build();
 

@@ -112,7 +112,7 @@ public class ApplicationDbContext: DbContext
         modelBuilder.Entity<ShowSeats>(entity =>
         {
             entity.HasKey(showSeat => showSeat.ShowSeatId);
-            entity.Property(showSeat => showSeat.Status).IsRequired().HasMaxLength(30);
+            entity.Property(showSeat => showSeat.Status).IsRequired().HasMaxLength(20);
 
             entity.HasOne(showSeat => showSeat.Show)
                 .WithMany()
