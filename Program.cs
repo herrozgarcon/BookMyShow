@@ -28,6 +28,8 @@ builder.Services.AddScoped<IScreenService, ScreenService>();
 builder.Services.AddScoped<IScreenRepo, ScreenRepo>();
 builder.Services.AddScoped<ISeatsRepo, SeatsRepo>();
 builder.Services.AddScoped<ISeatsService, SeatsService>();
+builder.Services.AddScoped<IShowsRepo, ShowsRepo>();
+builder.Services.AddScoped<IShowsService, ShowsService>();
 
 var app = builder.Build();
 

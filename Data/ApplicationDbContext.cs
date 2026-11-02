@@ -16,6 +16,10 @@ public class ApplicationDbContext: DbContext
     
     public DbSet<Screens> Screens{ get; set; }
     public DbSet<Seats> Seats { get; set; }
+    public DbSet<Shows> Shows { get; set; }
+    public DbSet<ShowSeats> ShowSeats { get; set; }
+    
+    
     
     
     
@@ -85,6 +89,42 @@ public class ApplicationDbContext: DbContext
                 .HasForeignKey(s => s.ScreensId)
                 .OnDelete(DeleteBehavior.Restrict);
             entity.HasIndex(s => new { s.ScreensId, s.RowName, s.SeatNumber }).IsUnique();
+        });
+
+        modelBuilder.Entity<Shows>(entity =>
+        {
+            entity.HasKey(show => show.ShowId);
+            entity.Property(show => show.StartTime).IsRequired().HasColumnType("datetime2");
+            entity.Property(show => show.EndTime).IsRequired().HasColumnType("datetime2");
+            entity.Property(show => show.TicketPrice).IsRequired().HasPrecision(18, 2);
+
+            entity.HasOne(show => show.Movie)
+                .WithMany()
+                .HasForeignKey(show => show.MovieId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(show => show.Screen)
+                .WithMany()
+                .HasForeignKey(show => show.ScreensId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        modelBuilder.Entity<ShowSeats>(entity =>
+        {
+            entity.HasKey(showSeat => showSeat.ShowSeatId);
+            entity.Property(showSeat => showSeat.Status).IsRequired().HasMaxLength(30);
+
+            entity.HasOne(showSeat => showSeat.Show)
+                .WithMany()
+                .HasForeignKey(showSeat => showSeat.ShowId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(showSeat => showSeat.Seat)
+                .WithMany()
+                .HasForeignKey(showSeat => showSeat.SeatId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasIndex(showSeat => new { showSeat.ShowId, showSeat.SeatId }).IsUnique();
         });
 
 
