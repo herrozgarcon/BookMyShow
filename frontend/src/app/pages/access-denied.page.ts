@@ -1,0 +1,2 @@
+import{Component}from'@angular/core';import{RouterLink}from'@angular/router';
+@Component({standalone:true,imports:[RouterLink],template:`<section class="panel text-center py-5"><div class="eyebrow">403 · ACCESS DENIED</div><h1>This area is <em>restricted.</em></h1><p class="muted">Your signed-in account does not have administrator access.</p><a class="btn btn-dark" routerLink="/">Return to movies</a></section>`})export class AccessDeniedPage{}

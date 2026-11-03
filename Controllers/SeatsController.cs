@@ -1,11 +1,13 @@
 using BookMyShow.DTOs;
 using BookMyShow.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BookMyShow.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize(Roles = "Admin")]
 public class SeatsController : ControllerBase
 {
     private readonly ISeatsService _service;

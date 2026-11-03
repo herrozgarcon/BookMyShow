@@ -21,7 +21,7 @@ public class CreateMovieDto
     [DataType(DataType.Date)]
     public DateOnly ReleaseDate { get; set; }
     
-    [Required]
+    [Range(1, int.MaxValue)]
     public int Durationminutes { get; set; }
     
     [Required]

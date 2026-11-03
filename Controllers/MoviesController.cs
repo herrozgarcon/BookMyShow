@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Authorization;
 namespace BookMyShow.Controllers;
 [ApiController]
 [Route("api/[controller]")]
-[Authorize(Roles = "Admin")]
 public class MoviesController : Controller
 {
     

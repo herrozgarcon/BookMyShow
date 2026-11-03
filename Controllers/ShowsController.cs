@@ -26,10 +26,10 @@ public class ShowsController : ControllerBase
         catch (InvalidOperationException ex) { return Conflict(ex.Message); }
     }
 
-    [HttpGet]
+    [Authorize(Roles = "Admin"), HttpGet]
     public async Task<IActionResult> GetAll() => Ok(await _showsService.GetAllAsync());
 
-    [HttpGet("{id:int}")]
+    [Authorize(Roles = "Admin"), HttpGet("{id:int}")]
     public async Task<IActionResult> GetById(int id)
     {
         var show = await _showsService.GetByIdAsync(id);

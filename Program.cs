@@ -18,7 +18,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 
 builder.Services.AddControllers();
-
+builder.Services.AddCors(options => options.AddPolicy("AngularDevelopment", policy =>
+    policy.WithOrigins("http://localhost:4200", "http://127.0.0.1:4200", "http://localhost:5218")
+        .AllowAnyHeader()
+        .AllowAnyMethod()));
+builder.Services.AddOpenApi();
 var jwt = builder.Configuration.GetSection("jwtConfig");
 var signingKey = jwt["Key"];
 if (string.IsNullOrWhiteSpace(signingKey) || Encoding.UTF8.GetByteCount(signingKey) < 32 || signingKey.StartsWith("<", StringComparison.Ordinal))
@@ -102,7 +106,11 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseDefaultFiles();
+app.UseStaticFiles();
+app.UseCors("AngularDevelopment");
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
+app.MapFallbackToFile("index.html");
 app.Run();

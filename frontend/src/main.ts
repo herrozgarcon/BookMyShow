@@ -1,0 +1,2 @@
+import { bootstrapApplication } from '@angular/platform-browser'; import { provideRouter } from '@angular/router'; import { provideHttpClient,withInterceptors } from '@angular/common/http'; import { AppComponent } from './app/pages/app.component'; import { authInterceptor } from './app/core/auth'; import { routes } from './app/routes';
+bootstrapApplication(AppComponent,{providers:[provideRouter(routes),provideHttpClient(withInterceptors([authInterceptor]))]}).catch(console.error);
